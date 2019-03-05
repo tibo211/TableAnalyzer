@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 include(Table.pri);
+include(Reader.pri);
 
 SOURCES += \
         main.cpp \
