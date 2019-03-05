@@ -12,11 +12,13 @@ public:
     explicit TableReader(QObject *parent = nullptr);
     ~TableReader();
 
+    bool addFile(QString path);
+
 private:
     QString path;
     QFile *file;
     QTextStream *textStream;
-    bool addFile(QString path);
+
 
 signals:
 

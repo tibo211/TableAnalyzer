@@ -3,6 +3,7 @@
 
 #include <QTableWidget>
 #include <QtCore>
+#include "tablereader.h"
 
 class TableViewer : public QTableWidget
 {
@@ -11,7 +12,11 @@ public:
     explicit TableViewer(QWidget *parent = nullptr);
     ~TableViewer();
 
-    void closing();
+    void setFile(QString path);
+    TableReader *getReader() const;
+
+private:
+    TableReader *reader;
 };
 
 #endif // TABLEVIEWER_H

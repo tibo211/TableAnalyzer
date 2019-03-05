@@ -26,6 +26,7 @@ CONFIG += c++11
 
 include(Table.pri);
 include(Reader.pri);
+include(Analyzer.pri);
 
 SOURCES += \
         main.cpp \

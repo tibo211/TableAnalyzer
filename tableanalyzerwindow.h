@@ -21,9 +21,14 @@ public:
 private:
     QList<TableViewer *> tableViewers;
     Ui::TableAnalyzerWindow *ui;
-    void dropEvent(QDropEvent *event) override;
-    void dragEnterEvent(QDragEnterEvent* event) override;
 
+    //Accept drag and drop files
+    void dropEvent(QDropEvent *event) override;
+
+    //Opens new table viewer
+    //Set the file for the table viewer
+    //Starts reading
+    void dragEnterEvent(QDragEnterEvent* event) override;
 };
 
 #endif // TABLEANALYZERWINDOW_H

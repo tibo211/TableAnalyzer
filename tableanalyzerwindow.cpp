@@ -11,6 +11,7 @@ TableAnalyzerWindow::~TableAnalyzerWindow() {
     foreach(auto tableViewer, tableViewers){
         if(tableViewer != nullptr) delete tableViewer;
     }
+    tableViewers.clear();
     delete ui;
 }
 
@@ -18,6 +19,9 @@ void TableAnalyzerWindow::dragEnterEvent(QDragEnterEvent *event) {
     if(event->mimeData()->hasUrls()) event->acceptProposedAction();
 }
 
+//Opens new table viewer
+//Set the file for the table viewer
+//Starts reading
 void TableAnalyzerWindow::dropEvent(QDropEvent *event){
     foreach(auto url, event->mimeData()->urls()){
         QString path = url.toLocalFile();
@@ -25,6 +29,7 @@ void TableAnalyzerWindow::dropEvent(QDropEvent *event){
         TableViewer *tableViewer = new TableViewer;
         tableViewer->setWindowTitle("Table [" + filename + "]");
         tableViewer->show();
+        tableViewer->setFile(path);
         tableViewers.append(tableViewer);
     }
 }
