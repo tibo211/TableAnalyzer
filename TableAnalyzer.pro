@@ -24,14 +24,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+include(Table.pri);
+
 SOURCES += \
         main.cpp \
-        tableanalyzerwindow.cpp \
-    tableviewer.cpp
+        tableanalyzerwindow.cpp
 
 HEADERS += \
-        tableanalyzerwindow.h \
-    tableviewer.h
+        tableanalyzerwindow.h
 
 FORMS += \
         tableanalyzerwindow.ui
