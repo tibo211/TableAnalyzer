@@ -1,10 +1,19 @@
 #include "tableanalyzerwindow.h"
 #include "ui_tableanalyzerwindow.h"
 
+QString TableReader::separator;
+QString TableReader::endofline;
+char *TableReader::encoding;
+
 TableAnalyzerWindow::TableAnalyzerWindow(QWidget *parent):QMainWindow(parent),
     ui(new Ui::TableAnalyzerWindow) {
     ui->setupUi(this);
     setAcceptDrops(true);
+
+    //These should be set in the UI
+    TableReader::separator = "<<DIV>>";
+    TableReader::endofline = "<<EOL>>";
+    TableReader::encoding = QString("UTF-8").toUtf8().data();
 }
 
 TableAnalyzerWindow::~TableAnalyzerWindow() {
@@ -19,9 +28,6 @@ void TableAnalyzerWindow::dragEnterEvent(QDragEnterEvent *event) {
     if(event->mimeData()->hasUrls()) event->acceptProposedAction();
 }
 
-//Opens new table viewer
-//Set the file for the table viewer
-//Starts reading
 void TableAnalyzerWindow::dropEvent(QDropEvent *event){
     foreach(auto url, event->mimeData()->urls()){
         QString path = url.toLocalFile();

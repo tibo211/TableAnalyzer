@@ -10,10 +10,14 @@ TableViewer::~TableViewer(){
 
 void TableViewer::setFile(QString path){
     reader = new TableReader;
-    if(!reader->addFile(path)){
+    if(!(reader->addFile(path))){
         hide();
         return;
     }
+
+    setColumnCount(reader->headers.length());
+
+    setHorizontalHeaderLabels(reader->headers);
 }
 
 TableReader *TableViewer::getReader() const { return reader; }

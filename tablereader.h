@@ -12,6 +12,12 @@ public:
     explicit TableReader(QObject *parent = nullptr);
     ~TableReader();
 
+    static QString separator;
+    static QString endofline;
+    static char *encoding;
+
+    QStringList headers;
+
     bool addFile(QString path);
 
 private:
