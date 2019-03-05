@@ -5,6 +5,7 @@
 #include <QtCore>
 #include <QDragEnterEvent>
 #include "tableviewer.h"
+#include "tablereader.h"
 
 namespace Ui {
 class TableAnalyzerWindow;
@@ -18,7 +19,7 @@ public:
     ~TableAnalyzerWindow() override;
 
 private:
-    TableViewer *tableViewer;
+    QList<TableViewer *> tableViewers;
     Ui::TableAnalyzerWindow *ui;
     void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent* event) override;
