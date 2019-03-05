@@ -26,10 +26,12 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        tableanalyzerwindow.cpp
+        tableanalyzerwindow.cpp \
+    tableviewer.cpp
 
 HEADERS += \
-        tableanalyzerwindow.h
+        tableanalyzerwindow.h \
+    tableviewer.h
 
 FORMS += \
         tableanalyzerwindow.ui
