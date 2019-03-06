@@ -24,11 +24,15 @@ private:
     QString path;
     QFile *file;
     QTextStream *textStream;
-
+    QStringList *rows;
+    int rowIdx;
 
 signals:
+    void addRows(QStringList *rows, int length);
+    void finished();
 
 public slots:
+    void startRead();
 };
 
 #endif // TABLEREADER_H

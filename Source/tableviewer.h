@@ -15,8 +15,15 @@ public:
     void setFile(QString path);
     TableReader *getReader() const;
 
+public slots:
+    void addRows(QStringList *rows, int length);
+
+signals:
+    void startRead();
+
 private:
     TableReader *reader;
+    QThread readThread;
 };
 
 #endif // TABLEVIEWER_H
