@@ -69,7 +69,7 @@ void TableViewer::update() {
             int rowID = rowCount();
             insertRow(rowID);
             if(row.length() != columnCount()) {
-                QMessageBox::information(nullptr, "error", "columns error in row: ");
+                QMessageBox::information(nullptr, "error", "columns error in row: " + QString::number(rowID));
                 return;
             }
             int colID = 0;
@@ -79,7 +79,7 @@ void TableViewer::update() {
                 bool changeColumnWidth = false;
                 if(value.contains('\n')){
                     resizeRow = true;
-                foreach (auto v, value.split('\n')) {
+                    foreach (auto v, value.split('\n')) {
                         if(v.count() > maxColWidth[colID]){
                             maxColWidth[colID] = v.count();
                             changeColumnWidth = true;
@@ -96,8 +96,9 @@ void TableViewer::update() {
                 colID++;
             }
 
+            if (resizeRow) resizeRowToContents(rowID);
             row.clear();
         }
-        QTimer::singleShot(10,this, &TableViewer::update);
+        QTimer::singleShot(0.1,this, &TableViewer::update);
     }
 }

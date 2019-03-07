@@ -59,6 +59,7 @@ void TableReader::startRead()
         if(sepIdx == sepLength){
             row.append(value.left(value.length() - sepLength));
             value = "";
+            sepIdx = 0;
         }
 
         if(eolIdx == eolLength){
@@ -73,6 +74,8 @@ void TableReader::startRead()
             }
 
             row.clear();
+            sepIdx = 0;
+            eolIdx = 0;
         }
     }
 
