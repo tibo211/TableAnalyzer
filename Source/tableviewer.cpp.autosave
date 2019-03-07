@@ -89,6 +89,7 @@ void TableViewer::update() {
             int rowID = rowCount();
             if(row.length() != columnCount()) {
                 QMessageBox::information(nullptr, "error", "columns error in row: ");
+                return;
             }
 
 
