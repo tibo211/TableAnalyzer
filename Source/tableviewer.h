@@ -2,6 +2,7 @@
 #define TABLEVIEWER_H
 
 #include <QTableWidget>
+#include <QHeaderView>
 #include <QtCore>
 #include "tablereader.h"
 
@@ -24,6 +25,7 @@ signals:
 private:
     TableReader *reader;
     QThread readThread;
+    int *maxColWidth;
 };
 
 #endif // TABLEVIEWER_H
