@@ -1,14 +1,15 @@
 #include "tableviewer.h"
 
 TableViewer::TableViewer(QWidget *parent):QTableWidget(parent){
-
+    isReading = false;
+    rowQueue = new QQueue<QStringList>;
 }
 
 TableViewer::~TableViewer(){
     if(reader != nullptr) delete reader;
 }
 
-void TableViewer::setFile(QString path){
+void TableViewer::setFile(QString path) {
     reader = new TableReader;
     if(!(reader->addFile(path))){
         hide();
@@ -20,6 +21,21 @@ void TableViewer::setFile(QString path){
     maxColWidth = new int[columnCount()];
     for (int i = 0; i < columnCount(); ++i) { maxColWidth[i] = 2; }
 
+    setTableSize();
+
+    reader->moveToThread(&readThread);
+    connect(&readThread,&QThread::started,reader,&TableReader::startRead);
+    connect(reader, &TableReader::addRows, this, &TableViewer::addRows);
+    connect(reader, &TableReader::finished, &readThread, &QThread::quit);
+    connect(reader, &TableReader::finished, this, &TableViewer::doneReading);
+
+    readThread.start();
+    isReading = true;
+    QTimer::singleShot(10,this, &TableViewer::update);
+}
+
+void TableViewer::setTableSize()
+{
     int w = verticalHeader()->width() + 40;
     for (int i = 0; i < columnCount(); ++i) {
         w += columnWidth(i);
@@ -28,14 +44,6 @@ void TableViewer::setFile(QString path){
     QSize minsize(w,w);
     setMaximumSize(maxsize);
     setMinimumSize(minsize);
-
-
-    reader->moveToThread(&readThread);
-    connect(&readThread,&QThread::started,reader,&TableReader::startRead);
-    connect(reader, &TableReader::addRows, this, &TableViewer::addRows);
-    connect(reader, &TableReader::finished, &readThread, &QThread::quit);
-
-    readThread.start();
 }
 
 TableReader *TableViewer::getReader() const { return reader; }
@@ -43,31 +51,53 @@ TableReader *TableViewer::getReader() const { return reader; }
 void TableViewer::addRows(QStringList *rows, int length)
 {
     for (int i = 0; i < length; ++i) {
-        int rowID = rowCount();
-        insertRow(rowID);
-        for (int colID = 0; colID < columnCount(); ++colID) {
-            QString value = rows[i][colID];
-            setItem(rowID,colID, new QTableWidgetItem(value));
-
-            //resize columns
-            if(value.contains("\n")){
-                resizeRowToContents(rowID);
-                foreach(auto v, value.split("\n")) {
-                    if(v.length() > maxColWidth[colID]){
-                        maxColWidth[colID] = value.length();
-                        resizeColumnToContents(colID);
-                    }
-                }
-            } else {
-                if(value.length() > maxColWidth[colID]){
-                    maxColWidth[colID] = value.length();
-                    resizeColumnToContents(colID);
-                }
-            }
-        }
-        rows[i].clear();
+        rowQueue->enqueue(rows[i]);
     }
 
     delete [] rows;
+}
 
+void TableViewer::doneReading()
+{
+    isReading = false;
+}
+
+void TableViewer::update() {
+    if (isReading || !rowQueue->isEmpty()) {
+        if(!rowQueue->isEmpty()){
+            QStringList row = rowQueue->dequeue();
+            int rowID = rowCount();
+            insertRow(rowID);
+            if(row.length() != columnCount()) {
+                QMessageBox::information(nullptr, "error", "columns error in row: ");
+                return;
+            }
+            int colID = 0;
+
+            bool resizeRow = false;
+            foreach (auto value, row) {
+                bool changeColumnWidth = false;
+                if(value.contains('\n')){
+                    resizeRow = true;
+                foreach (auto v, value.split('\n')) {
+                        if(v.count() > maxColWidth[colID]){
+                            maxColWidth[colID] = v.count();
+                            changeColumnWidth = true;
+                        }
+                    }
+                } else {
+                    if(value.count() > maxColWidth[colID]){
+                        maxColWidth[colID] = value.count();
+                        changeColumnWidth = true;
+                    }
+                }
+                setItem(rowID,colID, new QTableWidgetItem(value));
+                if(changeColumnWidth) resizeColumnToContents(colID);
+                colID++;
+            }
+
+            row.clear();
+        }
+        QTimer::singleShot(10,this, &TableViewer::update);
+    }
 }
