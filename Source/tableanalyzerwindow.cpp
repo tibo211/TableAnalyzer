@@ -3,7 +3,6 @@
 
 QString TableReader::separator;
 QString TableReader::endofline;
-char *TableReader::encoding;
 
 TableAnalyzerWindow::TableAnalyzerWindow(QWidget *parent):QMainWindow(parent),
     ui(new Ui::TableAnalyzerWindow) {
@@ -13,7 +12,6 @@ TableAnalyzerWindow::TableAnalyzerWindow(QWidget *parent):QMainWindow(parent),
     //These should be set in the UI
     TableReader::separator = "<<DIV>>";
     TableReader::endofline = "<<EOL>>";
-    TableReader::encoding = QString("UTF-8").toUtf8().data();
 }
 
 TableAnalyzerWindow::~TableAnalyzerWindow() {

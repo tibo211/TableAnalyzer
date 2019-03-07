@@ -13,7 +13,7 @@ bool TableReader::addFile(QString path){
         return false;
     }
     textStream = new QTextStream(file);
-    textStream->setCodec(encoding);
+    textStream->setCodec("UTF-8");
     QString line;
     if(!textStream->readLineInto(&line)){
         QMessageBox::information(nullptr, "error", "Cannot read the header row");

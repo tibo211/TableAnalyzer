@@ -14,7 +14,6 @@ public:
 
     static QString separator;
     static QString endofline;
-    static char *encoding;
 
     QStringList headers;
 
